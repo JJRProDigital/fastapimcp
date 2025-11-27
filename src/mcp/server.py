@@ -8,13 +8,15 @@ from src.schemas.tag import TagCreate
 mcp = FastMCP("FastAPI Blog MCP")
 
 @mcp.tool()
-def listar_tags() -> str:
+def listar_tags(**kwargs) -> str:
     """
     Lista todos los tags existentes en la base de datos del blog.
     Devuelve una cadena formateada con los tags encontrados.
+    Acepta kwargs para ignorar parámetros extra inyectados por agentes (sessionId, etc).
     """
     db = SessionLocal()
     try:
+        # kwargs se ignora deliberadamente
         tags = tag_crud.get_tags(db)
         if not tags:
             return "No hay tags registrados."
@@ -25,11 +27,12 @@ def listar_tags() -> str:
         db.close()
 
 @mcp.tool()
-def crear_nuevo_tag(nombre: str) -> str:
+def crear_nuevo_tag(nombre: str, **kwargs) -> str:
     """
     Crea un nuevo tag en la base de datos.
     Args:
         nombre: El nombre del tag a crear.
+        **kwargs: Parámetros extra ignorados (para compatibilidad con n8n/LangChain).
     """
     db = SessionLocal()
     try:
