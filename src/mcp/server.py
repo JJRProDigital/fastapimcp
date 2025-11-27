@@ -7,16 +7,25 @@ from src.schemas.tag import TagCreate
 # Inicializar el servidor MCP
 mcp = FastMCP("FastAPI Blog MCP")
 
+from typing import Optional
+
+# ... imports ...
+
 @mcp.tool()
-def listar_tags(**kwargs) -> str:
+def listar_tags(
+    sessionId: Optional[str] = None, 
+    action: Optional[str] = None, 
+    chatInput: Optional[str] = None,
+    tool: Optional[str] = None,
+    toolCallId: Optional[str] = None
+) -> str:
     """
     Lista todos los tags existentes en la base de datos del blog.
     Devuelve una cadena formateada con los tags encontrados.
-    Acepta kwargs para ignorar parámetros extra inyectados por agentes (sessionId, etc).
+    Los parámetros opcionales son para compatibilidad con n8n.
     """
     db = SessionLocal()
     try:
-        # kwargs se ignora deliberadamente
         tags = tag_crud.get_tags(db)
         if not tags:
             return "No hay tags registrados."
@@ -27,14 +36,21 @@ def listar_tags(**kwargs) -> str:
         db.close()
 
 @mcp.tool()
-def crear_nuevo_tag(nombre: str, **kwargs) -> str:
+def crear_nuevo_tag(
+    nombre: str,
+    sessionId: Optional[str] = None, 
+    action: Optional[str] = None, 
+    chatInput: Optional[str] = None,
+    tool: Optional[str] = None,
+    toolCallId: Optional[str] = None
+) -> str:
     """
     Crea un nuevo tag en la base de datos.
     Args:
         nombre: El nombre del tag a crear.
-        **kwargs: Parámetros extra ignorados (para compatibilidad con n8n/LangChain).
     """
     db = SessionLocal()
+
     try:
         tag_in = TagCreate(name=nombre)
         # Nota: Asegúrate de que create_tag maneje excepciones de duplicados
