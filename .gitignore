@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# Variables de entorno (SECRETOS)
+.env
+.env.*
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs y bases de datos locales
+*.log
+*.sqlite
+*.db
+
+# Alembic (solo si usas versiones generadas que no quieres subir, pero usualmente versions/ SI se sube)
+# alembic/versions/
+
+# FastMCP / Cursor
+terminals/
+
